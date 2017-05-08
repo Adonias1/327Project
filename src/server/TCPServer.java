@@ -84,12 +84,7 @@ public class TCPServer {
 			int nextFibNumber = 0;	
 			do{
 				//calculate next fib number using fib sequence formula.
-				if(nextFibNumber >= 1134903170){
-					fibNumber = 1;
-					prevFibNum = -1;
-				}
 				nextFibNumber = fibNumber + prevFibNum;
-				
 				//override the current and prev fib numbers
 				prevFibNum = fibNumber;
 				fibNumber = nextFibNumber;
