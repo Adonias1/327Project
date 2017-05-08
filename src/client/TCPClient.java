@@ -30,50 +30,8 @@ class TCPClient{
 			serverResponse = inFromServer.readLine(); // Receiving response from server
 			System.out.println("Prime Number from Server: " + serverResponse); // Printing response from server
 	    }
-<<<<<<< Updated upstream
 		}
 		//clientSocket.close(); //Close client connection with the server
-=======
-		class localThr extends Thread {
-			public localThr(){
-				ConcurrentlinkedQueue<> requestQueue = new ConcurrentLinkedQueue<>();
-				ConcurrentlinkedQueue<> returnQueue = new ConcurrentLinkedQueue<>();
-			}
-			
-			public void run(){
-				
-			}
-		}
-		//////////////////////////////////////////////////////////
-		class uThr extends Thread {
-			public uThr(Socket sock){
-				
-			}
-			public void run(){
-				
-			}
-		}
-		//////////////////////////////////////////////////////////
-		class runtimeThr extends Thread {
-			public runtimeThr(Socket sock){
-				
-			}
-			public void run(){
-				
-			}
-		}
-		//////////////////////////////////////////////////////////
-		class networkThr extends Thread {
-			public networkThr(Socket sock){
-				
-			}
-			public void run(){
-				
-			}
-		}
-		//////////////////////////////////////////////////////////
-		clientSocket.close(); //Close client connection with the server
->>>>>>> Stashed changes
 	}
 	
 }
