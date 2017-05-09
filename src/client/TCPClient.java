@@ -3,6 +3,7 @@ package client;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.*;
 
 import server.TCPServer.ServerSocketThread;
@@ -30,41 +31,46 @@ class TCPClient{
 			serverResponse = inFromServer.readLine(); // Receiving response from server
 			System.out.println("Prime Number from Server: " + serverResponse); // Printing response from server
 	    }
-<<<<<<< HEAD
-		}
-		//clientSocket.close(); //Close client connection with the server
-=======
 		clientSocket.close(); //Close client connection with the server
+
 	}
 	class localThr extends Thread {
 		public localThr(){
-			ConcurrentlinkedQueue<> requestQueue = new ConcurrentLinkedQueue<>();
-			ConcurrentlinkedQueue<> returnQueue = new ConcurrentLinkedQueue<>();
+			
 		}
 		
 		public void run(){
 			
 		}
 	}
-	//////////////////////////////////////////////////////////
 	class uThr extends Thread {
+		private runtimeThr runtime;
 		public uThr(){
-			
+			runtime = new runtimeThr();
 		}
 		public void run(){
-			
+			for(int i = 0; i < 20; i++){
+				Random rand = new Random();
+				String command = "" + (rand.nextInt(5) + 1);
+				runtime.requestQueue.add(command);
+			}
+			for(int i = 0; i < 20; i++){
+				System.out.println(runtime.returnQueue);
+			}
 		}
 	}
-	//////////////////////////////////////////////////////////
 	class runtimeThr extends Thread {
+		public ConcurrentLinkedQueue<String> requestQueue;
+		public ConcurrentLinkedQueue<String> returnQueue;
 		public runtimeThr(){
-			
+			requestQueue = new ConcurrentLinkedQueue<>();
+			returnQueue = new ConcurrentLinkedQueue<>();
 		}
 		public void run(){
 			
 		}
 	}
-	//////////////////////////////////////////////////////////
+
 	class networkThr extends Thread {
 		public networkThr(){
 			
@@ -72,7 +78,5 @@ class TCPClient{
 		public void run(){
 			
 		}
->>>>>>> origin/master
 	}
-	//////////////////////////////////////////////////////////
 }
