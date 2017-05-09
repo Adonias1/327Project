@@ -60,8 +60,8 @@ class TCPClient{
 		}
 	}
 	class runtimeThr extends Thread {
-		public ConcurrentLinkedQueue<String> requestQueue;
-		public ConcurrentLinkedQueue<String> returnQueue;
+		private ConcurrentLinkedQueue<String> requestQueue;
+		private ConcurrentLinkedQueue<String> returnQueue;
 		public runtimeThr(){
 			requestQueue = new ConcurrentLinkedQueue<>();
 			returnQueue = new ConcurrentLinkedQueue<>();
