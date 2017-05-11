@@ -51,11 +51,11 @@ class TCPClient{
 			switch(command){
 			case"1":
 				data.respond = nextEven();
-				data.q.signal();
+				runtime.returnQueue.add(data);
 				break;
 			case"2":
 				data.respond = nextOdd();
-				data.q.signal();
+				runtime.returnQueue.add(data);
 				break;
 			}
 		}
@@ -89,7 +89,7 @@ class TCPClient{
 				lock.lock();
 				try {
 					q.await();
-					Data data = runtime.getRespond();
+					Data data = runtime.getResponse();
 					System.out.println("Thread: "+ data.threadID + " Respond: " + data.respond);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -127,14 +127,16 @@ class TCPClient{
 						net.start();
 					}
 				}
-				requestQueue.peek().q.signal();
+				if(returnQueue.peek() != null){
+					returnQueue.poll().q.signal();
+				}
 			}
 		}
 		public void add(Data command){
 			requestQueue.add(command);
 		}
-		public Data getRespond(){
-			return returnQueue.poll();
+		public Data getResponse(){
+			return returnQueue.peek();
 		}
 	}
 
