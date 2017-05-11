@@ -24,15 +24,16 @@ class Data{
 		this.threadID = t;
 		this.command = c;
 	}
-	
 }
 
 class TCPClient{
 	public static runtimeThr runtime = new runtimeThr();
+	static ArrayList<uThr> upperThreads = new ArrayList<>();
+	private static int odd = 1;
+	private static int even = 0;
 	public static void main(String argv[]) throws Exception{
 		runtime.start();
-		ArrayList<uThr> upperThreads = new ArrayList<>();
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 2; i++){
 			upperThreads.add(new uThr());
 			upperThreads.get(i).start();
 		}
@@ -40,8 +41,6 @@ class TCPClient{
 	static class localThr extends Thread {
 		private String command;
 		private Data data;
-		private int odd = 1;
-		private int even = 0;
 		public localThr(Data d){
 			data = d;
 			command = d.command;
@@ -50,8 +49,13 @@ class TCPClient{
 		public void run(){
 			switch(command){
 			case"1":
-				data.respond = nextEven();
-				runtime.returnQueue.add(data);
+				data.lock.lock();
+				try{
+					data.respond = nextEven();
+					runtime.returnQueue.add(data);
+				}finally{
+					data.lock.unlock();
+				}
 				break;
 			case"2":
 				data.respond = nextOdd();
@@ -77,8 +81,8 @@ class TCPClient{
 			q = lock.newCondition();
 		}
 		public void run(){
-			for(int i = 0; i < 1; i++){
-				Data data = new Data(lock, q, this.getThreadId(), "10");
+			for(int i = 0; i < 20; i++){
+				Data data = new Data(lock, q, threadID, "");
 				Random rand = new Random();
 				String command =  "" + (rand.nextInt(5) + 1);
 				//System.out.println(command);
@@ -112,13 +116,12 @@ class TCPClient{
 			returnQueue = new ConcurrentLinkedQueue<>();
 		}
 		public void run(){
-			System.out.println("runtime");
 			while(true){
 				if(requestQueue.peek() != null){
 					String command = requestQueue.peek().command;
-					System.out.println("command:" + command);
 					if(command == "1" || command == "2"){
 						localThr local = new localThr(requestQueue.peek());
+						requestQueue.poll();
 						local.start();
 					}
 					else if(command == "3" || command == "4" 
@@ -127,8 +130,13 @@ class TCPClient{
 						net.start();
 					}
 				}
-				if(returnQueue.peek() != null){
-					returnQueue.poll().q.signal();
+				if(returnQueue.peek() != null || returnQueue.size() != 0){
+					returnQueue.peek().lock.lock();
+					try{
+						returnQueue.peek().q.signal();
+					}finally{
+						returnQueue.peek().lock.unlock();
+					}
 				}
 			}
 		}
@@ -136,7 +144,7 @@ class TCPClient{
 			requestQueue.add(command);
 		}
 		public Data getResponse(){
-			return returnQueue.peek();
+			return returnQueue.poll();
 		}
 	}
 
@@ -159,7 +167,7 @@ class TCPClient{
 				// TODO send the response back to uThr 
 				
 				data.respond = Integer.parseInt(serverResponse);
-				data.q.signalAll();
+				
 				clientSocket.close(); //Close client connection with the server
 			} catch (IOException e) {
 				e.printStackTrace();
