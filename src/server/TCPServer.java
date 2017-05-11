@@ -2,7 +2,7 @@ package server;
 
 /*
  * Hector De La Vega, Henna Gohil, Gary Nunez, Adonias Lopez
- * CECS 327 Assignment #7 - TCP Socket Assignment
+ * CECS 327 Assignment #6 - TCP Server-Client connection
  * Professor Ratana Ngo
  */
 
@@ -23,20 +23,36 @@ import java.util.Random;
  *
  */
 public class TCPServer {
-	//Server Socket
+	/**
+	 * Server Socket
+	 */
 	private static ServerSocket serverSocket;
-	//primeNumber keeps track of the current largest primeNumber
+	/**
+	 * primeNumber keeps track of the current largest primeNumber
+	 */
 	private static int primeNumber = 1;
-	//fibNumber keeps track of server current fibNumber
+	/**
+	 * fibNumber keeps track of server current fibNumber
+	 */
 	private static int fibNumber = 1;
-	//prevFibNum keeps track of the previous fibNumber
+	/**
+	 * prevFibNum keeps track of the previous fibNumber
+	 */
 	private static int prevFibNum = -1;
-	//prevRandNum keeps track of the previous largest Random Number
+	/**
+	 * prevRandNum keeps track of the previous largest Random Number
+	 */
 	private static int prevRandNum = 0;
-	//LargeRandomNum keeps track of the current largest Number
+
+	/**
+	 * LargeRandomNum keeps track of the current largest Number
+	 */
 	private static int LargeRandNum = 0;
 	
-	//ArrayList will contain a collection of client SocketThread connections.
+
+	/**
+	 * ArrayList will contain a collection of client SocketThread connections.
+	 */
 	private static ArrayList<ServerSocketThread> socketList = new ArrayList<ServerSocketThread>();
 	
 	
@@ -85,9 +101,15 @@ public class TCPServer {
 			do{
 				//calculate next fib number using fib sequence formula.
 				nextFibNumber = fibNumber + prevFibNum;
+				if(nextFibNumber >= 1134903170){
+					fibNumber = 1;
+					prevFibNum = -1;
+				}
 				//override the current and prev fib numbers
+				else{
 				prevFibNum = fibNumber;
 				fibNumber = nextFibNumber;
+				}
 				//keep doing this until a fib number that is even is found.
 			}while(nextFibNumber % 2 != 0);
 		}
@@ -213,15 +235,15 @@ public class TCPServer {
 					userInput = in.readLine();
 					
 					//nextEvenFib
-					if(userInput.compareTo("1") == 0){
+					if(userInput.compareTo("3") == 0){
 						int fib = getNextFib();
-						out.writeBytes(fib + "\n");
+						out.writeBytes("Fib: " + fib + "\n");
 					//nextLargerRand
-					}else if(userInput.compareTo("2") == 0){
+					}else if(userInput.compareTo("4") == 0){
 						int nxtLRand = nextLargetRand();
-						out.writeBytes(nxtLRand + "\n");
+						out.writeBytes("Large rand: "+ nxtLRand + "\n");
 					//nextPrime
-					}else if(userInput.compareTo("3") == 0){
+					}else if(userInput.compareTo("5") == 0){
 						out.writeBytes("Prime: " + nextPrimeNumb() + "\n");
 					}else{
 						out.writeBytes("Unknown Command\n");
