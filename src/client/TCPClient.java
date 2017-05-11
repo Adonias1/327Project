@@ -33,7 +33,7 @@ class TCPClient{
 	private static int even = 0;
 	public static void main(String argv[]) throws Exception{
 		runtime.start();
-		for(int i = 0; i < 2; i++){
+		for(int i = 0; i < 1; i++){
 			upperThreads.add(new uThr());
 			upperThreads.get(i).start();
 		}
@@ -81,28 +81,24 @@ class TCPClient{
 			q = lock.newCondition();
 		}
 		public void run(){
-			for(int i = 0; i < 20; i++){
+			for(int i = 0; i < 1; i++){
 				Data data = new Data(lock, q, threadID, "");
 				Random rand = new Random();
 				String command =  "" + (rand.nextInt(5) + 1);
 				//System.out.println(command);
 				data.command = "1";
 				runtime.requestQueue.add(data);
-			}
-			for(int i = 0; i < 20; i++){
 				lock.lock();
 				try {
 					q.await();
-					Data data = runtime.getResponse();
-					System.out.println("Thread: "+ data.threadID + " Respond: " + data.respond);
+					Data dataResponse = runtime.getResponse();
+					System.out.println("Thread: "+ data.threadID + " Respond: " + dataResponse.respond);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally {
 					lock.unlock();
 				}
-				
 			}
-			
 		}
 		public long getThreadId(){
 			return this.threadID;
