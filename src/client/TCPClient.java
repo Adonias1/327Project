@@ -172,7 +172,7 @@ class TCPClient{
 				while(runtime.returnQueue.peek() == null || 
 						threadID != runtime.returnQueue.peek().threadID){
 					try {
-						sleep(1);
+						sleep(250);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -278,7 +278,7 @@ class TCPClient{
 			lock.lock();
 			String serverResponse; // String to hold response from server
 			try {
-				Socket clientSocket = new Socket("localhost", 4279); // Establishing connection to server
+				Socket clientSocket = new Socket("192.168.1.16", 4279); // Establishing connection to server
 				DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // Creating a BufferedReader  to receive responses from the server
 				outToServer.writeBytes(command + "\n"); // Send command "1" to the server
